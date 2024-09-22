@@ -10,4 +10,5 @@ enum class Error(val description: String) {
     FractionalPowerOfNegative("Attempt to raise negative number to the fractional power"),
     ZeroToZero("Attempt to raise zero to the power of zero"),
     EmptyInput("Empty input"),
+    BadOperator("Unknown operator"),
 }
