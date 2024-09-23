@@ -29,11 +29,10 @@ fun Routing.routes(routerConfig: RouterConfig?) {
 
     get("/lucky") {
         // IDK what is this for
-        if (routerConfig == null)
-            {
-                call.respondFile(File("src/main/resources/static/images/silly-cat-bleh.jpg"))
-            }
+        if (routerConfig == null) {
+            call.respondFile(File("src/main/resources/static/images/silly-cat-bleh.jpg"))
+        }
         call.respondRedirect(routerConfig!!.rickRollUrl)
     }
-    TODO("more routes")
+    // TODO("more routes")
 }
