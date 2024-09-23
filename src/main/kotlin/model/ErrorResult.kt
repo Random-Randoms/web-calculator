@@ -3,4 +3,4 @@ package org.example.model
 import kotlinx.serialization.Serializable
 
 @Serializable
-class ErrorResult(val error: Error) : Result
+class ErrorResult(val error: ParsingError) : Result

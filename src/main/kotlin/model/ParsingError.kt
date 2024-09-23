@@ -3,7 +3,7 @@ package org.example.model
 import kotlinx.serialization.Serializable
 
 @Serializable
-enum class Error(val description: String) {
+enum class ParsingError(val description: String) {
     DivisionByZero("Division by zero"),
     BadBrackets("Incorrect bracket positioning"),
     BadOperand("Wrong amount of operands"),
@@ -11,4 +11,6 @@ enum class Error(val description: String) {
     ZeroToZero("Attempt to raise zero to the power of zero"),
     EmptyInput("Empty input"),
     BadOperator("Unknown operator"),
+    IncorrectNumber("Incorrect number"),
+    Unknown("Unknown error"),
 }
