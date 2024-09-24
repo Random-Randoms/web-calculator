@@ -95,7 +95,7 @@ fun Routing.routes(routerConfig: RouterConfig?) {
 
         post("/destroy") {
             clearHistory()
-            call.respond(HttpStatusCode.OK)
+            call.respondRedirect("/calculator")
         }
     }
 }
