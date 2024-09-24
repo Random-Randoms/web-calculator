@@ -2,10 +2,7 @@
 
 package org.example.server
 
-import dbs.Equation
-import dbs.addQuery
-import dbs.addUser
-import dbs.forEachEquationOfUser
+import dbs.*
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -75,15 +72,7 @@ fun Routing.routes(routerConfig: RouterConfig?) {
 
     authenticate("auth-session") {
         get("/calculator") {
-            val history = mutableListOf<Any>()
-            forEachEquationOfUser(call.sessions.get<Session>()!!.id()!!) {
-                history.add(
-                    object {
-                        val expression = this@forEachEquationOfUser.expression
-                        val result = this@forEachEquationOfUser.result
-                    },
-                )
-            }
+            val history = fullHistory()
             call.respond(
                 ThymeleafContent(
                     "modernStyleCalc",
