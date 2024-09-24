@@ -49,20 +49,22 @@ fun forEachEquationOfUser(
 }
 
 fun fullHistory(): List<Any> =
-    User
-        .all()
-        .asSequence()
-        .map { user -> user.queries.map { user to it } }
-        .flatten()
-        .sortedByDescending { it.second.id }
-        .take(100)
-        .map {
-            object {
-                val user = it.first.login
-                val expression = it.second.expression
-                val result = it.second.result
-            }
-        }.toList()
+    transaction {
+        User
+            .all()
+            .asSequence()
+            .map { user -> user.queries.map { user to it } }
+            .flatten()
+            .sortedByDescending { it.second.id }
+            .take(100)
+            .map {
+                object {
+                    val user = it.first.login
+                    val expression = it.second.expression
+                    val result = it.second.result
+                }
+            }.toList()
+    }
 
 fun getUserIdOrNull(
     login: String,
