@@ -38,7 +38,7 @@
                     </thead>
                     <tbody>
                     <tr th:each="row, i: ${history}">
-                        <td class="max left-align"><a class="clickableHistory" th:text="${row.user}"></a></td>
+                        <td class="max left-align" th:text="${row.user}"></td>
                         <td class="max center-align"><a class="clickableHistory" th:text="${row.expression}"></a></td>
                         <td class="min right-align"><a class="clickableHistory" th:text="${row.result}" ></a></td>
                     </tr>
