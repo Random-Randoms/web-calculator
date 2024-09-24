@@ -48,7 +48,7 @@ fun forEachEquationOfUser(
     }
 }
 
-fun fullHistory(): List<Triple<String, String, String>> =
+fun fullHistory(): List<Any> =
     User
         .all()
         .asSequence()
@@ -56,8 +56,13 @@ fun fullHistory(): List<Triple<String, String, String>> =
         .flatten()
         .sortedByDescending { it.second.id }
         .take(100)
-        .map { Triple(it.first.login, it.second.expression, it.second.result) }
-        .toList()
+        .map {
+            object {
+                val user = it.first.login
+                val expression = it.second.expression
+                val result = it.second.result
+            }
+        }.toList()
 
 fun getUserIdOrNull(
     login: String,
