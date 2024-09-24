@@ -4,6 +4,7 @@ package org.example.server
 
 import dbs.Equation
 import dbs.addQuery
+import dbs.addUser
 import dbs.forEachEquationOfUser
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -46,14 +47,19 @@ fun Routing.routes(routerConfig: RouterConfig?) {
     }
 
     post("/login") {
-        val formContent = call.receiveText()
-        val params = (Json.parseToJsonElement(formContent) as JsonObject).toMap()
+        val params = call.params()
         val session = Session(params.jsonValue("login"), params.jsonValue("password"))
         if (!validUser(session)) {
             return@post
         }
         call.sessions.set(session)
         call.respondRedirect("/calculator")
+    }
+
+    post("/register") {
+        val params = call.params()
+        addUser(params.jsonValue("login"), params.jsonValue("password"))
+        call.respondRedirect("/login")
     }
 
     authenticate("auth-session") {
@@ -72,8 +78,7 @@ fun Routing.routes(routerConfig: RouterConfig?) {
         }
 
         post("/calculator/evaluate") {
-            val content = call.receiveText()
-            val params = (Json.parseToJsonElement(content) as JsonObject).toMap()
+            val params = call.params()
             val who = call.sessions.get<Session>()?.id()!!
             val expression = params.jsonValue("expression")
             val evaluated = ExpressionParser(expression).parseString().toString()
@@ -87,4 +92,9 @@ fun Routing.routes(routerConfig: RouterConfig?) {
 private fun Map<String, JsonElement>.jsonValue(key: String): String {
     val quoted = this[key].toString()
     return quoted.substring(1, quoted.length - 1)
+}
+
+private suspend fun ApplicationCall.params(): Map<String, JsonElement> {
+    val content = receiveText()
+    return (Json.parseToJsonElement(content) as JsonObject).toMap()
 }
