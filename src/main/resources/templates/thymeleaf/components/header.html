@@ -19,7 +19,7 @@
             <div class="s2 right-align">
                 <div th:if="${!user.equals(0)}">
                     <a class="circle transparent horizontal" href="/login">
-                        <span>Выйти</span>
+                        <span th:text="${user}" id="user"></span>
                         <i>logout</i>
                     </a>
                 </div>

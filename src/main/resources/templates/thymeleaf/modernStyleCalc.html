@@ -27,18 +27,18 @@
                     </div>
                 </div>
                 <h2 class="center center-align">Calculation History</h2>
-                <table>
+                <table id="historyTable">
                     <thead>
                         <tr>
                             <th class="max left-align">User</th>
-                            <th class="center-align">Expression</th>
-                            <th class="max left-align">Result</th>
+                            <th class="max center-align">Expression</th>
+                            <th class="min right-align">Result</th>
                         </tr>
                     </thead>
                     <tbody>
                     <tr th:each="row, i: ${history}">
                         <td class="max left-align"><a class="clickableHistory" th:text="${row.user}"></a></td>
-                        <td class="center-align"><a class="clickableHistory" th:text="${row.expression}"></a></td>
+                        <td class="max center-align"><a class="clickableHistory" th:text="${row.expression}"></a></td>
                         <td class="min right-align"><a class="clickableHistory" th:text="${row.result}" ></a></td>
                     </tr>
                     </tbody>
