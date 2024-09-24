@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/html">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>WebCalc</title>
@@ -17,14 +17,30 @@
             <div class="s1"></div>
             <div class="s10">
                 <div class="max">
-                    <div class="field orange-border label max suffix">
+                    <div class="field border orange-border label max suffix">
                         <input>
                         <label style="font-style: italic; color: #666666">Enter what you want to calculate</label>
-                        <i class="min" id="evalButton" style="background-color: #ff7e00; color: white">
+                        <a><i class="min" id="evalButton" style="background-color: #ff7e00; color: white">
                             equal
-                        </i>
+                        </i><progress hidden id="evalProgress"></progress></a>
+
                     </div>
                 </div>
+                <h2 class="center center-align">Calculation History</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="max left-align">Expression</th>
+                            <th class="max left-align">Result</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="row, i: ${history}">
+                        <td class="max left-align"><a th:text="${row.expression}" ></a></td>
+                        <td class="min right-align"><a th:text="${row.result}" ></a></td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </main>
     </div>
