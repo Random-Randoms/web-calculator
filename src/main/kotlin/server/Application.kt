@@ -2,11 +2,16 @@
 
 package server
 
+import dbs.DatabaseBuilder
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+
+fun init() {
+    DatabaseBuilder.initialize()
+}
 
 fun main(args: Array<String>) {
     var port = 80
@@ -14,7 +19,14 @@ fun main(args: Array<String>) {
         if (arg.startsWith("--port=")) {
             port = arg.substringAfter("--port=").toInt()
         }
+        if (arg == "--build") {
+            DatabaseBuilder.build()
+        }
+        if (arg == "--destroy") {
+            DatabaseBuilder.destroy()
+        }
     }
+    init()
     runBlocking {
         launch {
             embeddedServer(Netty, port = port, host = "0.0.0.0", module = Application::module)

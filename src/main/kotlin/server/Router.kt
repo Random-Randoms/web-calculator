@@ -6,6 +6,7 @@ import dbs.Equation
 import dbs.addQuery
 import dbs.addUser
 import dbs.forEachEquationOfUser
+import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.http.content.*
@@ -46,10 +47,20 @@ fun Routing.routes(routerConfig: RouterConfig?) {
         )
     }
 
+    get("/register") {
+        call.respond(
+            ThymeleafContent(
+                "register",
+                mapOf(),
+            ),
+        )
+    }
+
     post("/login") {
         val params = call.params()
         val session = Session(params.jsonValue("login"), params.jsonValue("password"))
         if (!validUser(session)) {
+            call.respond(HttpStatusCode.Unauthorized)
             return@post
         }
         call.sessions.set(session)
@@ -64,14 +75,22 @@ fun Routing.routes(routerConfig: RouterConfig?) {
 
     authenticate("auth-session") {
         get("/calculator") {
-            val history = mutableListOf<Pair<String, String>>()
+            val history = mutableListOf<Any>()
             forEachEquationOfUser(call.sessions.get<Session>()!!.id()!!) {
-                history.add(this.expression to this.result)
+                history.add(
+                    object {
+                        val expression = this@forEachEquationOfUser.expression
+                        val result = this@forEachEquationOfUser.result
+                    },
+                )
             }
             call.respond(
                 ThymeleafContent(
-                    "modernStyleCalculator",
-                    mapOf("history" to history),
+                    "modernStyleCalc",
+                    mapOf(
+                        "user" to 1,
+                        "history" to history,
+                    ),
                 ),
             )
         }

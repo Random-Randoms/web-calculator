@@ -23,9 +23,18 @@ object DatabaseBuilder {
             SchemaUtils.create(Users, Queries)
         }
     }
+
+    fun destroy() {
+        transaction {
+            SchemaUtils.drop(Queries, Users)
+        }
+    }
 }
 
-data class Equation(val expression: String, val result: String)
+data class Equation(
+    val expression: String,
+    val result: String,
+)
 
 fun forEachEquationOfUser(
     id: EntityID<Int>,
@@ -68,10 +77,16 @@ fun addUser(
 fun addQuery(
     id: EntityID<Int>,
     equation: Equation,
-): EntityID<Int> {
-    return transaction {
+): EntityID<Int> =
+    transaction {
         val newNumber: ULong =
-            User[id].queries.orderBy(Pair(Queries.number, SortOrder.DESC)).limit(1).firstOrNull()?.number?.plus(1UL)
+            User[id]
+                .queries
+                .orderBy(Pair(Queries.number, SortOrder.DESC))
+                .limit(1)
+                .firstOrNull()
+                ?.number
+                ?.plus(1UL)
                 ?: 0UL
         Queries.insert {
             it[user] = id
@@ -80,4 +95,3 @@ fun addQuery(
             it[number] = newNumber
         }[Queries.id]
     }
-}

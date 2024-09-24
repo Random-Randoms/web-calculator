@@ -7,7 +7,7 @@
     <script type="module" src="/static/modules/beer/beer.min.js"></script>
     <script type="module" src="/static/modules/beer/material-dynamic-colors.min.js"></script>
 
-    <link href="/static/theme.css" rel="stylesheet">
+    <link href="/static/styles/theme.css" rel="stylesheet">
 </head>
 <body>
 <div class="grid">
@@ -20,11 +20,10 @@
                 <div class="max">
                     <div class="field border orange-border label max suffix">
                         <input id="inputField">
-                        <label style="font-style: italic; color: #666666">Enter what you want to calculate</label>
-                        <a id="evalButton"></aid><i class="min" id="equalIcon" style="background-color: #ff7e00; color: white">
+                        <label style="font-style: italic; color: #666666;" class="min">Enter what you want to calculate</label>
+                        <a id="evalButton"></a><i class="min" id="equalIcon" style="background-color: #ff7e00; color: white">
                             equal
-                        </i><progress hidden id="evalProgress"></progress></a>
-
+                        </i><progress class="circle" hidden id="evalProgress"></progress></a>
                     </div>
                 </div>
                 <h2 class="center center-align">Calculation History</h2>
