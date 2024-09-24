@@ -22,23 +22,30 @@ class ExpressionParser(string: String) {
     }
 
     private fun parseExpression(): Double {
-        val left = parseTerm()
-        val operator = nextSymbol() ?: return left
-        dropFirst()
+        var result = parseTerm()
 
-        if (operator == '+') {
-            return left + parseExpression()
+        while (true) {
+            val operator = nextSymbol() ?: return result
+            dropFirst()
+
+            if (operator == '+') {
+                result += parseTerm()
+                continue
+            }
+
+            if (operator == '-') {
+                result -= parseTerm()
+                continue
+            }
+
+            if (operator == ')') {
+                break
+            }
+
+            throw ParsingException(ParsingError.BadOperator)
         }
 
-        if (operator == '-') {
-            return left - parseExpression()
-        }
-
-        if (operator == ')') {
-            return left
-        }
-
-        throw ParsingException(ParsingError.BadOperator)
+        return result
     }
 
     private fun parseTerm(): Double {
@@ -76,9 +83,14 @@ class ExpressionParser(string: String) {
 
     private fun parseNumber(): Double {
         try {
-            val string = input.takeWhile { isDigit(it) || isDecimalPoint(it) || it == '-' }
+            var sign = 1
+            if (nextSymbol() == '-') {
+                sign = -1
+                dropFirst()
+            }
+            val string = input.takeWhile { isDigit(it) || isDecimalPoint(it) }
             input = input.drop(string.count())
-            return string.joinToString("").toDouble()
+            return string.joinToString("").toDouble() * sign
         } catch (e: NumberFormatException) {
             throw ParsingException(ParsingError.IncorrectNumber)
         } catch (e: Exception) {
