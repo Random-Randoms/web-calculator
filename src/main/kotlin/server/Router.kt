@@ -15,6 +15,7 @@ import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
 import io.ktor.server.thymeleaf.*
 import kotlinx.datetime.format.FormatStringsInDatetimeFormats
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
@@ -83,7 +84,7 @@ fun Routing.routes(routerConfig: RouterConfig?) {
             val expression = params.jsonValue("expression")
             val evaluated = ExpressionParser(expression).parseString().toString()
             addQuery(who, Equation(expression, evaluated))
-            call.respond(Json.encodeToJsonElement(evaluated))
+            call.respond(Evaluated(evaluated))
         }
     }
 
@@ -98,3 +99,6 @@ private suspend fun ApplicationCall.params(): Map<String, JsonElement> {
     val content = receiveText()
     return (Json.parseToJsonElement(content) as JsonObject).toMap()
 }
+
+@Serializable
+data class Evaluated(val evaluated: String)
