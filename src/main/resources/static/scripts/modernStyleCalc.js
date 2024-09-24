@@ -40,8 +40,8 @@ evalButton.onclick = () => {
             var row = table.insertRow(1)
             row.innerHTML =`
                 <td class="max left-align">`+user+`</td>
-                <td className="max center-align"><a className="clickableHistory">`+data.expression+`</a></td>
-                <td className="min right-align"><a className="clickableHistory">`+result+`</a></td>`
+                <td class="max center-align"><a class="clickableHistory">`+data.expression+`</a></td>
+                <td class="min right-align"><a class="clickableHistory">`+result+`</a></td>`
         }
     )
 }
