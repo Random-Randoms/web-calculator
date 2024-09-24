@@ -8,10 +8,12 @@ import org.jetbrains.exposed.sql.Column
 
 object Users : IntIdTable("user", "user_id") {
     val login: Column<String> = varchar("login", 20).uniqueIndex()
-    val passwordHash: Column<String> = varchar("password_hash", 50)
+    val passwordHash: Column<String> = varchar("password_hash", 257)
 }
 
-class User(id: EntityID<Int>) : IntEntity(id) {
+class User(
+    id: EntityID<Int>,
+) : IntEntity(id) {
     companion object : IntEntityClass<User>(Users)
 
     val login by Users.login
@@ -28,7 +30,9 @@ object Queries : IntIdTable("query", "query_id") {
     val number: Column<ULong> = ulong("number")
 }
 
-class Query(id: EntityID<Int>) : IntEntity(id) {
+class Query(
+    id: EntityID<Int>,
+) : IntEntity(id) {
     companion object : IntEntityClass<Query>(Queries)
 
     val expression by Queries.expression

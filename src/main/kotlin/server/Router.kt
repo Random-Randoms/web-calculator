@@ -6,6 +6,7 @@ import dbs.Equation
 import dbs.addQuery
 import dbs.addUser
 import dbs.forEachEquationOfUser
+import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.http.content.*
@@ -19,7 +20,6 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.encodeToJsonElement
 import org.example.model.ExpressionParser
 import org.example.server.login.Session
 import org.example.server.login.validUser
@@ -47,10 +47,20 @@ fun Routing.routes(routerConfig: RouterConfig?) {
         )
     }
 
+    get("/register") {
+        call.respond(
+            ThymeleafContent(
+                "register",
+                mapOf(),
+            ),
+        )
+    }
+
     post("/login") {
         val params = call.params()
         val session = Session(params.jsonValue("login"), params.jsonValue("password"))
         if (!validUser(session)) {
+            call.respond(HttpStatusCode.Unauthorized)
             return@post
         }
         call.sessions.set(session)
@@ -64,17 +74,24 @@ fun Routing.routes(routerConfig: RouterConfig?) {
     }
 
     authenticate("auth-session") {
-
         get("/calculator") {
-            val history = mutableListOf<Pair<String, String>>()
+            val history = mutableListOf<Any>()
             forEachEquationOfUser(call.sessions.get<Session>()!!.id()!!) {
-                history.add(this.expression to this.result)
+                history.add(
+                    object {
+                        val expression = this@forEachEquationOfUser.expression
+                        val result = this@forEachEquationOfUser.result
+                    },
+                )
             }
             call.respond(
                 ThymeleafContent(
-                    "modernStyleCalculator",
-                    mapOf("history" to history),
-                )
+                    "modernStyleCalc",
+                    mapOf(
+                        "user" to 1,
+                        "history" to history,
+                    ),
+                ),
             )
         }
 
@@ -84,10 +101,9 @@ fun Routing.routes(routerConfig: RouterConfig?) {
             val expression = params.jsonValue("expression")
             val evaluated = ExpressionParser(expression).parseString().toString()
             addQuery(who, Equation(expression, evaluated))
-            call.respond(Evaluated(evaluated))
+            call.respondText(evaluated)
         }
     }
-
 }
 
 private fun Map<String, JsonElement>.jsonValue(key: String): String {
@@ -101,4 +117,6 @@ private suspend fun ApplicationCall.params(): Map<String, JsonElement> {
 }
 
 @Serializable
-data class Evaluated(val evaluated: String)
+data class Evaluated(
+    val evaluated: String,
+)

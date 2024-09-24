@@ -1,10 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Modern Calc</title>
+    <title>WebCalc</title>
+    <link href="/static/modules/beer/beer.min.css" rel="stylesheet">
+    <script type="module" src="/static/modules/beer/beer.min.js"></script>
+    <script type="module" src="/static/modules/beer/material-dynamic-colors.min.js"></script>
+
+    <link href="/static/styles/theme.css" rel="stylesheet">
 </head>
 <body>
-
+<div class="grid">
+    <div class="s0 m1 l2"></div>
+    <div class="s12 m10 l8">
+        <div th:insert="~{components/header :: header(${user})}"></div>
+        <main class="responsive grid">
+            <div class="s1"></div>
+            <div class="s10">
+                <div class="max">
+                    <div class="field border orange-border label max suffix">
+                        <input id="inputField">
+                        <label style="font-style: italic; color: #666666;" class="min">Enter what you want to calculate</label>
+                        <a id="evalButton"></a><i class="min" id="equalIcon" style="background-color: #ff7e00; color: white">
+                            equal
+                        </i><progress class="circle" hidden id="evalProgress"></progress></a>
+                    </div>
+                </div>
+                <h2 class="center center-align">Calculation History</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="max left-align">Expression</th>
+                            <th class="max left-align">Result</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="row, i: ${history}">
+                        <td class="max left-align"><a class="clickableHistory" th:text="${row.expression}"></a></td>
+                        <td class="min right-align"><a class="clickableHistory" th:text="${row.result}" ></a></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+    <div class="s0 m1 l2"></div>
+</div>
+<script src="/static/scripts/modernStyleCalc.js"></script>
 </body>
 </html>
