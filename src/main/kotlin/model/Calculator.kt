@@ -23,9 +23,8 @@ class ExpressionParser(string: String) {
 
     private fun parseExpression(): Double {
         val left = parseTerm()
-        val operator = input.firstOrNull() ?: return left
-
-        input = input.drop(1)
+        val operator = nextSymbol() ?: return left
+        dropFirst()
 
         if (operator == '+') {
             return left + parseExpression()
@@ -45,15 +44,15 @@ class ExpressionParser(string: String) {
     private fun parseTerm(): Double {
         val left = parseMultiplier()
 
-        val first = input.firstOrNull() ?: return left
+        val first = nextSymbol() ?: return left
 
         if (first == '*') {
-            input = input.drop(1)
+            dropFirst()
             return left * parseTerm()
         }
 
         if (first == '/') {
-            input = input.drop(1)
+            dropFirst()
             return left / parseTerm()
         }
 
@@ -61,12 +60,14 @@ class ExpressionParser(string: String) {
     }
 
     private fun parseMultiplier(): Double {
-        if (isOpeningBracket(input.first())) {
-            input = input.drop(1)
+        val first = nextSymbol() ?: throw ParsingException(ParsingError.Unknown)
+
+        if (isOpeningBracket(first)) {
+            dropFirst()
             return parseExpression()
         }
 
-        if (isDigit(input.first())) {
+        if (isDigit(first)) {
             return parseNumber()
         }
 
@@ -83,5 +84,17 @@ class ExpressionParser(string: String) {
         } catch (e: Exception) {
             throw ParsingException(ParsingError.Unknown)
         }
+    }
+
+    private fun nextSymbol(): Char? {
+        while (input.firstOrNull() == ' ') {
+            dropFirst()
+        }
+
+        return input.firstOrNull()
+    }
+
+    private fun dropFirst() {
+        input = input.drop(1)
     }
 }
