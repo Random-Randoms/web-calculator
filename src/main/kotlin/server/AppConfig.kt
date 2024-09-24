@@ -50,7 +50,7 @@ private fun AuthenticationConfig.installAuthentication() {
 private fun SessionAuthenticationProvider.Config<Session>.authSessionNoRedirect() {
     skipWhen { call -> call.sessions.get<Session>() == null }
     validate { session ->
-        if (validUser(session.login, session.password)) {
+        if (validUser(session)) {
             session
         } else {
             Session("", "")
@@ -60,7 +60,7 @@ private fun SessionAuthenticationProvider.Config<Session>.authSessionNoRedirect(
 
 private fun SessionAuthenticationProvider.Config<Session>.authSession() {
     validate { session ->
-        if (validUser(session.login, session.password)) {
+        if (validUser(session)) {
             session
         } else {
             null

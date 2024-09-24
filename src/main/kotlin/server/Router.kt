@@ -2,6 +2,9 @@
 
 package org.example.server
 
+import dbs.Equation
+import dbs.addQuery
+import dbs.forEachEquationOfUser
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.http.content.*
@@ -15,6 +18,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.encodeToJsonElement
+import org.example.model.ExpressionParser
 import org.example.server.login.Session
 import org.example.server.login.validUser
 import ru.shiroforbes.config.RouterConfig
@@ -44,22 +48,25 @@ fun Routing.routes(routerConfig: RouterConfig?) {
     post("/login") {
         val formContent = call.receiveText()
         val params = (Json.parseToJsonElement(formContent) as JsonObject).toMap()
-        val name = params.jsonValue("login")
-        val password = params.jsonValue("password")
-        if (!validUser(name, password)) {
+        val session = Session(params.jsonValue("login"), params.jsonValue("password"))
+        if (!validUser(session)) {
             return@post
         }
-        call.sessions.set(Session(name, password))
+        call.sessions.set(session)
         call.respondRedirect("/calculator")
     }
 
     authenticate("auth-session") {
 
         get("/calculator") {
+            val history = mutableListOf<Pair<String, String>>()
+            forEachEquationOfUser(call.sessions.get<Session>()!!.id()!!) {
+                history.add(this.expression to this.result)
+            }
             call.respond(
                 ThymeleafContent(
                     "modernStyleCalculator",
-                    mapOf(),
+                    mapOf("history" to history),
                 )
             )
         }
@@ -67,9 +74,10 @@ fun Routing.routes(routerConfig: RouterConfig?) {
         post("/calculator/evaluate") {
             val content = call.receiveText()
             val params = (Json.parseToJsonElement(content) as JsonObject).toMap()
-            val who = call.sessions.get<Session>()?.login
+            val who = call.sessions.get<Session>()?.id()!!
             val expression = params.jsonValue("expression")
-            val evaluated = 0
+            val evaluated = ExpressionParser(expression).parseString().toString()
+            addQuery(who, Equation(expression, evaluated))
             call.respond(Json.encodeToJsonElement(evaluated))
         }
     }
