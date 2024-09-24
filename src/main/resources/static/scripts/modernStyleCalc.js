@@ -17,10 +17,13 @@ evalButton.onclick = () => {
         method: "POST",
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(data)
-    }).then(response => response.json())
-        .then(json => {
+    }).then(async json => {
             alert("success")
-            inputField.value = json.evaluated
+            inputField.value = await json.text()// json.body.getReader().read().then(({ done, value }) => {
+            //     while (!done){
+            //     }
+            //    return value
+            // })
             equalIcon.hidden = false
             progress.hidden = true
         }

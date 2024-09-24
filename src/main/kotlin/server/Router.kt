@@ -19,7 +19,6 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.encodeToJsonElement
 import org.example.model.ExpressionParser
 import org.example.server.login.Session
 import org.example.server.login.validUser
@@ -64,7 +63,6 @@ fun Routing.routes(routerConfig: RouterConfig?) {
     }
 
     authenticate("auth-session") {
-
         get("/calculator") {
             val history = mutableListOf<Pair<String, String>>()
             forEachEquationOfUser(call.sessions.get<Session>()!!.id()!!) {
@@ -74,7 +72,7 @@ fun Routing.routes(routerConfig: RouterConfig?) {
                 ThymeleafContent(
                     "modernStyleCalculator",
                     mapOf("history" to history),
-                )
+                ),
             )
         }
 
@@ -84,10 +82,9 @@ fun Routing.routes(routerConfig: RouterConfig?) {
             val expression = params.jsonValue("expression")
             val evaluated = ExpressionParser(expression).parseString().toString()
             addQuery(who, Equation(expression, evaluated))
-            call.respond(Evaluated(evaluated))
+            call.respondText(evaluated)
         }
     }
-
 }
 
 private fun Map<String, JsonElement>.jsonValue(key: String): String {
@@ -101,4 +98,6 @@ private suspend fun ApplicationCall.params(): Map<String, JsonElement> {
 }
 
 @Serializable
-data class Evaluated(val evaluated: String)
+data class Evaluated(
+    val evaluated: String,
+)
