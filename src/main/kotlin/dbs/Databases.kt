@@ -6,7 +6,6 @@ import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
-import kotlin.text.insert
 
 object DatabaseBuilder {
     fun initialize() {
@@ -26,12 +25,14 @@ object DatabaseBuilder {
     }
 }
 
-fun forEachExpressionOfUser(
+data class Equation(val expression: String, val result: String)
+
+fun forEachEquationOfUser(
     id: EntityID<Int>,
-    block: String.() -> Unit,
+    block: Equation.() -> Unit,
 ) {
     transaction {
-        User[id].queries.orderBy(Pair(Queries.number, SortOrder.DESC)).forEach { it.expression.block() }
+        User[id].queries.orderBy(Pair(Queries.number, SortOrder.DESC)).forEach { Equation(it.expression, it.result).block() }
     }
 }
 
@@ -59,23 +60,24 @@ fun addUser(
     return transaction {
         return@transaction Users.insert {
             it[Users.login] = login
-            it[Users.passwordHash] = login
+            it[Users.passwordHash] = passwordHash
         }[Users.id]
     }
 }
 
 fun addQuery(
     id: EntityID<Int>,
-    expression: String,
-) {
-    transaction {
+    equation: Equation,
+): EntityID<Int> {
+    return transaction {
         val newNumber: ULong =
             User[id].queries.orderBy(Pair(Queries.number, SortOrder.DESC)).limit(1).firstOrNull()?.number?.plus(1UL)
                 ?: 0UL
         Queries.insert {
             it[user] = id
-            it[Queries.expression] = expression
+            it[expression] = equation.expression
+            it[result] = equation.result
             it[number] = newNumber
-        }
+        }[Queries.id]
     }
 }
