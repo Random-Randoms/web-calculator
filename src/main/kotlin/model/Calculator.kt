@@ -67,7 +67,7 @@ class ExpressionParser(string: String) {
             return parseExpression()
         }
 
-        if (isDigit(first)) {
+        if (isDigit(first) || first == '-') {
             return parseNumber()
         }
 
@@ -76,7 +76,7 @@ class ExpressionParser(string: String) {
 
     private fun parseNumber(): Double {
         try {
-            val string = input.takeWhile { isDigit(it) || isDecimalPoint(it) }
+            val string = input.takeWhile { isDigit(it) || isDecimalPoint(it) || it == '-' }
             input = input.drop(string.count())
             return string.joinToString("").toDouble()
         } catch (e: NumberFormatException) {
