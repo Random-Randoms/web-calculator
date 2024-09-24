@@ -116,3 +116,7 @@ fun addQuery(
             it[number] = newNumber
         }[Queries.id]
     }
+
+fun clearHistory() {
+    transaction { Queries.deleteAll() }
+}

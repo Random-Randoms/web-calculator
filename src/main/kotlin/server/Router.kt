@@ -77,7 +77,7 @@ fun Routing.routes(routerConfig: RouterConfig?) {
                 ThymeleafContent(
                     "modernStyleCalc",
                     mapOf(
-                        "user" to 1,
+                        "user" to call.sessions.get<Session>()?.login!!,
                         "history" to history,
                     ),
                 ),
@@ -91,6 +91,11 @@ fun Routing.routes(routerConfig: RouterConfig?) {
             val evaluated = ExpressionParser(expression).parseString().toString()
             addQuery(who, Equation(expression, evaluated))
             call.respondText(evaluated)
+        }
+
+        post("/destroy") {
+            clearHistory()
+            call.respondRedirect("/calculator")
         }
     }
 }

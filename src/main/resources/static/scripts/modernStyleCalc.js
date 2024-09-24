@@ -3,7 +3,23 @@ const progress = document.getElementById("evalProgress")
 const equalIcon = document.getElementById("equalIcon")
 const inputField = document.getElementById("inputField")
 const history = document.getElementsByClassName("clickableHistory")
+const table = document.getElementById("historyTable");
+const user = document.getElementById("user").textContent
+const destroy = document.getElementById("destroy")
 
+destroy.onclick = () => {
+    fetch("/destroy", {
+        method: "POST",
+        headers: {'Content-Type': 'application/json'},
+        body: {}
+    }).then(
+        async response => {
+            if(response.redirected){
+                window.location.assign(response.url)
+            }
+        }
+    )
+}
 evalButton.onclick = () => {
     equalIcon.hidden = true
     progress.hidden = false
@@ -16,16 +32,22 @@ evalButton.onclick = () => {
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(data)
     }).then(async json => {
-            inputField.value = await json.text()
+            let result = await json.text()
+            inputField.value = result
             equalIcon.hidden = false
             progress.hidden = true
 
+            var row = table.insertRow(1)
+            row.innerHTML =`
+                <td class="max left-align">`+user+`</td>
+                <td className="max center-align"><a className="clickableHistory">`+data.expression+`</a></td>
+                <td className="min right-align"><a className="clickableHistory">`+result+`</a></td>`
         }
     )
 }
 
 for (let i = 0; i < history.length; i++) {
     history[i].addEventListener("click", () => {
-        inputField.value+=history[i].textContent
-        })
+        inputField.value += history[i].textContent
+    })
 }
