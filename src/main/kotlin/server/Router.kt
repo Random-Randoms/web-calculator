@@ -77,7 +77,7 @@ fun Routing.routes(routerConfig: RouterConfig?) {
                 ThymeleafContent(
                     "modernStyleCalc",
                     mapOf(
-                        "user" to 1,
+                        "user" to call.sessions.get<Session>()?.login!!,
                         "history" to history,
                     ),
                 ),
