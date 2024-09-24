@@ -24,6 +24,7 @@ class User(id: EntityID<Int>) : IntEntity(id) {
 object Queries : IntIdTable("query", "query_id") {
     val user = reference("user_id", Users)
     val expression: Column<String> = text("expression")
+    val result: Column<String> = text("result")
     val number: Column<ULong> = ulong("number")
 }
 
@@ -31,6 +32,8 @@ class Query(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<Query>(Queries)
 
     val expression by Queries.expression
+
+    val result by Queries.result
 
     val number by Queries.number
 }

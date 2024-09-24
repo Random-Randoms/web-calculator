@@ -1,14 +1,12 @@
 package org.example.server.login
 
+import dbs.getUserIdOrNull
 import kotlinx.coroutines.runBlocking
-import java.security.MessageDigest
 
-// TODO("verify user")
 fun validUser(
-    login: String,
-    password: String,
+    session: Session,
 ): Boolean {
     return runBlocking {
-        return@runBlocking true
+        return@runBlocking session.id() != null
     }
 }
