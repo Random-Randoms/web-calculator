@@ -45,12 +45,19 @@ class ExpressionParser(string: String) {
     private fun parseTerm(): Double {
         val left = parseMultiplier()
 
-        return if (input.firstOrNull() == '*') {
+        val first = input.firstOrNull() ?: return left
+
+        if (first == '*') {
             input = input.drop(1)
-            left * parseTerm()
-        } else {
-            left
+            return left * parseTerm()
         }
+
+        if (first == '/') {
+            input = input.drop(1)
+            return left / parseTerm()
+        }
+
+        return left
     }
 
     private fun parseMultiplier(): Double {
