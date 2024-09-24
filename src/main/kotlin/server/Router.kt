@@ -92,6 +92,11 @@ fun Routing.routes(routerConfig: RouterConfig?) {
             addQuery(who, Equation(expression, evaluated))
             call.respondText(evaluated)
         }
+
+        post("/destroy") {
+            clearHistory()
+            call.respond(HttpStatusCode.OK)
+        }
     }
 }
 
