@@ -1,5 +1,8 @@
 package org.example
 
+import org.example.model.ExpressionParser
+
 fun main() {
-    println("Hello World!")
+    val res = ExpressionParser("2+3*(4)").parseString()
+    println(res)
 }
