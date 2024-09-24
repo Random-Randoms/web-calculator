@@ -41,9 +41,23 @@ fun forEachEquationOfUser(
     block: Equation.() -> Unit,
 ) {
     transaction {
-        User[id].queries.orderBy(Pair(Queries.number, SortOrder.DESC)).forEach { Equation(it.expression, it.result).block() }
+        User[id]
+            .queries
+            .orderBy(Pair(Queries.number, SortOrder.DESC))
+            .forEach { Equation(it.expression, it.result).block() }
     }
 }
+
+fun fullHistory(): List<Triple<String, String, String>> =
+    User
+        .all()
+        .asSequence()
+        .map { user -> user.queries.map { user to it } }
+        .flatten()
+        .sortedByDescending { it.second.id }
+        .take(100)
+        .map { Triple(it.first.login, it.second.expression, it.second.result) }
+        .toList()
 
 fun getUserIdOrNull(
     login: String,
@@ -80,8 +94,8 @@ fun addQuery(
 ): EntityID<Int> =
     transaction {
         val newNumber: ULong =
-            User[id]
-                .queries
+            Query
+                .all()
                 .orderBy(Pair(Queries.number, SortOrder.DESC))
                 .limit(1)
                 .firstOrNull()
