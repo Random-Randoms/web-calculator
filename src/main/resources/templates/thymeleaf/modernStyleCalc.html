@@ -30,13 +30,15 @@
                 <table>
                     <thead>
                         <tr>
-                            <th class="max left-align">Expression</th>
+                            <th class="max left-align">User</th>
+                            <th class="center-align">Expression</th>
                             <th class="max left-align">Result</th>
                         </tr>
                     </thead>
                     <tbody>
                     <tr th:each="row, i: ${history}">
-                        <td class="max left-align"><a class="clickableHistory" th:text="${row.expression}"></a></td>
+                        <td class="max left-align"><a class="clickableHistory" th:text="${row.user}"></a></td>
+                        <td class="center-align"><a class="clickableHistory" th:text="${row.expression}"></a></td>
                         <td class="min right-align"><a class="clickableHistory" th:text="${row.result}" ></a></td>
                     </tr>
                     </tbody>
