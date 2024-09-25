@@ -109,7 +109,7 @@ class ExpressionParserTest {
     @Test
     fun errorTest() {
         assert(errorResult("1%0").description == "Unknown operator")
-        assert(errorResult("2^3").description == "Unknown operator")
+        // assert(errorResult("2^3").description == "Unknown operator")
         assert(errorResult("2*").description == "Unknown error")
         assert(errorResult("1.2.3").description == "Incorrect number")
     }
@@ -155,6 +155,19 @@ class ExpressionParserTest {
         assert(doubleEqual(divRealToReal("3.6/2.5"), 1.44))
         assert(doubleEqual(divRealToReal("-4.7/(-1.6)"), 2.9375))
         assert(doubleEqual(divRealToReal("12.5/1.6"), 7.8125))
+    }
+
+    @Test
+    fun powTest() {
+        assert(ExpressionParser("2^3").parseString().toString() == "8")
+        assert(ExpressionParser("2^3^2").parseString().toString() == "512")
+        assert(ExpressionParser("2*2^3").parseString().toString() == "16")
+        assert(ExpressionParser("2^3*4^5").parseString().toString() == "8192")
+        assert(ExpressionParser("2^3+3^2").parseString().toString() == "17")
+        assert(ExpressionParser("2^(3-2)").parseString().toString() == "2")
+        assert(ExpressionParser("(-1)^(0.5)").parseString().toString() == "NaN")
+        assert(ExpressionParser("16^(1/2)").parseString().toString() == "4")
+        assert(ExpressionParser("(2^(1/3))^3").parseString().toString() == "2")
     }
 
     @Test

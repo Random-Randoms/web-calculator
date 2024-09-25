@@ -1,5 +1,7 @@
 package org.example.model
 
+import kotlin.math.pow
+
 class ExpressionParser(string: String) {
     class ParsingException(val error: ParsingError) : Exception()
 
@@ -73,6 +75,18 @@ class ExpressionParser(string: String) {
     }
 
     private fun parseMultiplier(): Double {
+        val left = parsePower()
+        val operator = nextSymbol() ?: return left
+
+        if (operator == '^') {
+            dropFirst()
+            return left.pow(parseMultiplier())
+        }
+
+        return left
+    }
+
+    private fun parsePower(): Double {
         val first = nextSymbol() ?: throw ParsingException(ParsingError.Unknown)
 
         if (isOpeningBracket(first)) {
