@@ -49,21 +49,27 @@ class ExpressionParser(string: String) {
     }
 
     private fun parseTerm(): Double {
-        val left = parseMultiplier()
+        var result = parseMultiplier()
 
-        val first = nextSymbol() ?: return left
+        while (true) {
+            val operator = nextSymbol() ?: return result
 
-        if (first == '*') {
-            dropFirst()
-            return left * parseTerm()
+            if (operator == '*') {
+                dropFirst()
+                result *= parseMultiplier()
+                continue
+            }
+
+            if (operator == '/') {
+                dropFirst()
+                result /= parseMultiplier()
+                continue
+            }
+
+            break
         }
 
-        if (first == '/') {
-            dropFirst()
-            return left / parseTerm()
-        }
-
-        return left
+        return result
     }
 
     private fun parseMultiplier(): Double {

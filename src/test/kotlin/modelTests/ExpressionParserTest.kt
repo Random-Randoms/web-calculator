@@ -170,4 +170,10 @@ class ExpressionParserTest {
         res = ExpressionParser("1*2*3*4").parseString()
         assert(res.toString() == "24")
     }
+
+    @Test
+    fun smoke() {
+        val res = ExpressionParser("(1+2) / (3 / 2 / (0.25)) + 3 / (-2)").parseString()
+        assert(res.toString() == "-1")
+    }
 }
