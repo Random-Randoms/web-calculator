@@ -13,8 +13,8 @@
 <div th:fragment="header(user)">
     <header class="fixed fill small-round">
         <nav class="grid">
-            <div class="s4 left-align"></div>
-            <div class="center center-align s6" th:insert="~{components/logo :: logo()}"></div>
+            <div class="s3 left-align"></div>
+            <div class="center center-align s7" style="margin-right: 20%" th:insert="~{components/logo :: logo()}"></div>
 
             <div class="s2 right-align">
                 <div th:if="${!user.equals(0)}">

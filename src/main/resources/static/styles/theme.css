@@ -37,3 +37,13 @@ body.light {
     --surface-container-high: #ece7eb;
     --surface-container-highest: #e6e1e6;
 }
+
+@font-face {
+    font-family: "PressStart2P";
+    /*font-face-name: "Publico Headline Web Bold Regular";*/
+    src: url("/static/fonts/PressStart2P-Regular.ttf") format("truetype");
+}
+
+body{
+    font-family: "PressStart2P", sans-serif;
+}

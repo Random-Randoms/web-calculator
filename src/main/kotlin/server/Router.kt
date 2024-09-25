@@ -28,7 +28,7 @@ fun Routing.routes(routerConfig: RouterConfig?) {
     staticFiles("/static", File("src/main/resources/static/"))
 
     get("/favicon.ico") {
-        call.respondFile(File("src/main/resources/static/images/silly-cat-bleh.jpg"))
+        call.respondFile(File("src/main/resources/static/images/favicon.png"))
     }
 
     get("/") {
