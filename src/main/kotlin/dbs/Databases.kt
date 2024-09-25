@@ -59,6 +59,7 @@ fun fullHistory(): List<Any> =
             .take(100)
             .map {
                 object {
+                    val id = it.second.id
                     val user = it.first.login
                     val expression = it.second.expression
                     val result = it.second.result

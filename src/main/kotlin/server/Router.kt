@@ -89,8 +89,8 @@ fun Routing.routes(routerConfig: RouterConfig?) {
             val who = call.sessions.get<Session>()?.id()!!
             val expression = params.jsonValue("expression")
             val evaluated = ExpressionParser(expression).parseString().toString()
-            addQuery(who, Equation(expression, evaluated))
-            call.respondText(evaluated)
+            val id = addQuery(who, Equation(expression, evaluated)).value
+            call.respondText("$id#$evaluated")
         }
 
         post("/destroy") {
@@ -113,4 +113,5 @@ private suspend fun ApplicationCall.params(): Map<String, JsonElement> {
 @Serializable
 data class Evaluated(
     val evaluated: String,
+    val id: Int,
 )

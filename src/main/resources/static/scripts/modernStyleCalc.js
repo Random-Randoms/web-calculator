@@ -14,15 +14,15 @@ destroy.onclick = () => {
         body: {}
     }).then(
         async response => {
-            if(response.redirected){
+            if (response.redirected) {
                 window.location.assign(response.url)
             }
         }
     )
 }
 evalButton.onclick = () => {
-    equalIcon.hidden = true
-    progress.hidden = false
+    equalIcon.style.display = "none"
+    progress.style.display = "block"
     const data = {
         "expression": inputField.value
     }
@@ -32,16 +32,19 @@ evalButton.onclick = () => {
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(data)
     }).then(async json => {
-            let result = await json.text()
+            let text = await json.text()
+            let id = text.substring(0, text.indexOf("#"))
+            let result = text.substring(text.indexOf("#") + 1)
             inputField.value = result
-            equalIcon.hidden = false
-            progress.hidden = true
+            equalIcon.style.display = "block"
+            progress.style.display = "none"
 
             var row = table.insertRow(1)
-            row.innerHTML =`
-                <td class="max left-align">`+user+`</td>
-                <td class="max center-align"><a class="clickableHistory">`+data.expression+`</a></td>
-                <td class="min right-align"><a class="clickableHistory">`+result+`</a></td>`
+            row.innerHTML =
+                `<td class="min left-align">` + id + `</td>
+                <td class="max left-align">` + user + `</td>
+                <td class="max center-align"><a class="clickableHistory">` + data.expression + `</a></td>
+                <td class="min right-align"><a class="clickableHistory">` + inputField.value + `</a></td>`
         }
     )
 }
