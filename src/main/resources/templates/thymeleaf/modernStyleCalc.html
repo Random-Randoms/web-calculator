@@ -6,7 +6,7 @@
     <link href="/static/modules/beer/beer.min.css" rel="stylesheet">
     <script type="module" src="/static/modules/beer/beer.min.js"></script>
     <script type="module" src="/static/modules/beer/material-dynamic-colors.min.js"></script>
-    <link rel="stylesheet" href="http://ваш_сайт/css/font-awesome.css">
+<!--    <link rel="stylesheet" href="http://ваш_сайт/css/font-awesome.css">-->
 
     <link href="/static/styles/theme.css" rel="stylesheet">
 </head>
@@ -22,12 +22,13 @@
                     <div class="field border orange-border label max suffix">
                         <input id="inputField">
                         <label style="font-style: italic; color: #666666;" class="min">Enter what you want to calculate</label>
-                        <a id="evalButton"></a><i class="min" id="equalIcon" style="background-color: #ff7e00; color: white">
-                            equal
-                        </i><progress class="circle" hidden id="evalProgress"></progress></a>
+                        <a id="evalButton">
+                            <i class="min" id="equalIcon" style="margin-bottom: 5%; background-color: #ff7e00; color: white">equal</i>
+                            <progress class="circle" hidden style="display: none" id="evalProgress"></progress>
+                        </a>
                     </div>
                 </div>
-                <h2 class="center center-align">Calculation History <a id="destroy"><i style="color: #FF7E00">Х</i></a></h2>
+                <h2 class="center center-align">Calculation History <a id="destroy"><i style="color: #FF7E00; scale: 200%">close</i></a></h2>
                 <table id="historyTable">
                     <thead>
                     <tr>

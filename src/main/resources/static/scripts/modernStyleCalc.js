@@ -21,8 +21,8 @@ destroy.onclick = () => {
     )
 }
 evalButton.onclick = () => {
-    equalIcon.hidden = true
-    progress.hidden = false
+    equalIcon.style.display = "none"
+    progress.style.display = "block"
     const data = {
         "expression": inputField.value
     }
@@ -34,8 +34,8 @@ evalButton.onclick = () => {
     }).then(async json => {
             let result = await json.text()
             inputField.value = result
-            equalIcon.hidden = false
-            progress.hidden = true
+        equalIcon.style.display = "block"
+        progress.style.display = "none"
 
             var row = table.insertRow(1)
             row.innerHTML =`
