@@ -30,16 +30,14 @@
                 <h2 class="center center-align">Calculation History <a id="destroy"><i style="color: #FF7E00">Х</i></a></h2>
                 <table id="historyTable">
                     <thead>
-                        <tr>
-                            <th class="max left-align">#</th>
-                            <th class="max left-align">User</th>
-                            <th class="max center-align">Expression</th>
-                            <th class="min right-align">Result</th>
-                        </tr>
+                    <tr>
+                        <th class="max left-align">User</th>
+                        <th class="max center-align">Expression</th>
+                        <th class="min right-align">Result</th>
+                    </tr>
                     </thead>
                     <tbody>
                     <tr th:each="row, i: ${history}">
-                        <td class="max left-align" th:text="${row.id}"></td>
                         <td class="max left-align" th:text="${row.user}"></td>
                         <td class="max center-align"><a class="clickableHistory" th:text="${row.expression}"></a></td>
                         <td class="min right-align"><a class="clickableHistory" th:text="${row.result}" ></a></td>

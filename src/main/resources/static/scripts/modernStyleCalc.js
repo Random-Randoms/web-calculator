@@ -33,14 +33,12 @@ evalButton.onclick = () => {
         body: JSON.stringify(data)
     }).then(async json => {
             let result = await json.text()
-            inputField.value = result.substring(result.indexOf("#") + 1)
+            inputField.value = result
             equalIcon.hidden = false
             progress.hidden = true
-            let id = result.split("#")[0]
 
             var row = table.insertRow(1)
             row.innerHTML =`
-                <td class="max left-align">`+id+`</td>
                 <td class="max left-align">`+user+`</td>
                 <td class="max center-align"><a class="clickableHistory">`+data.expression+`</a></td>
                 <td class="min right-align"><a class="clickableHistory">`+inputField.value+`</a></td>`
